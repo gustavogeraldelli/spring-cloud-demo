@@ -18,6 +18,7 @@ public class Card {
     @Enumerated(EnumType.STRING)
     private CardNetwork network;
     private BigDecimal income;
+    @Column(name = "card_limit")
     private BigDecimal limit;
 
     public Card(String name, CardNetwork network, BigDecimal income, BigDecimal limit) {
