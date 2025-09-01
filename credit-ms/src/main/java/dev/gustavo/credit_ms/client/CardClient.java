@@ -1,6 +1,7 @@
 package dev.gustavo.credit_ms.client;
 
-import dev.gustavo.credit_ms.controller.dto.ClientCard;
+import dev.gustavo.credit_ms.controller.dto.BasicCardData;
+import dev.gustavo.credit_ms.controller.dto.CardData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,10 @@ import java.util.List;
 @FeignClient(name = "card-ms")
 public interface CardClient {
 
-    @GetMapping(value = "/card", params = "code")
-    ResponseEntity<List<ClientCard>> getCards(@RequestParam("code") String code);
+    @GetMapping(value = "/cards", params = "code")
+    ResponseEntity<List<BasicCardData>> getCards(@RequestParam("code") String code);
+
+    @GetMapping("/cards")
+    ResponseEntity<List<CardData>> getCardsByIncome(@RequestParam("income") Long income);
 
 }

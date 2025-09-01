@@ -2,14 +2,16 @@ package dev.gustavo.credit_ms.service;
 
 import dev.gustavo.credit_ms.client.CardClient;
 import dev.gustavo.credit_ms.client.ClientClient;
-import dev.gustavo.credit_ms.controller.dto.ClientCard;
-import dev.gustavo.credit_ms.controller.dto.ClientData;
-import dev.gustavo.credit_ms.controller.dto.ClientSituationDTO;
+import dev.gustavo.credit_ms.controller.dto.*;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,12 +21,48 @@ public class CreditService {
     private final CardClient cardClient;
 
     public ClientSituationDTO clientSituation(String code) {
-        // get client data from client-ms (GET /client?cpf=)
-        ResponseEntity<ClientData> client = clientClient.getClientByCode(code);
-        // get card data from card-ms (GET /card?cpf=)
-        //ResponseEntity<List<ClientCard>> clientSituation = cardClient.getCards(code);
+        // get client data from client-ms (GET /clients?cpde=)
+        // get card data from card-ms (GET /cards?code=)
+        try {
+            ResponseEntity<ClientData> client = clientClient.getClientByCode(code);
+            // this functionality (client having a relation with cards) is not implemented yet
+            //ResponseEntity<List<ClientCard>> clientSituation = cardClient.getCards(code);
+            return new ClientSituationDTO(client.getBody(), null);
+        }
+        catch (FeignException.FeignClientException e) {
+            int status = e.status();
+            if (HttpStatus.NOT_FOUND.value() == status)
+                // throw custom exception and treat it to give a better response
+                return new ClientSituationDTO(null, null);
+            // same here
+            return new ClientSituationDTO(null, null);
+        }
+    }
 
-        return new ClientSituationDTO(client.getBody(), null);
+    public EvaluatedClient evaluate(String code, Long income) {
+        try {
+            // client data (age is used on this business logic)
+            ResponseEntity<ClientData> client = clientClient.getClientByCode(code);
+            // cards that accepts up to that income
+            ResponseEntity<List<CardData>> approvedCards = cardClient.getCardsByIncome(income);
+
+            // raising card limit using client's age
+            var mappedApprovedCards = approvedCards.getBody().stream().map(card -> {
+                BigDecimal ageB = BigDecimal.valueOf(client.getBody().age());
+                var limit = ageB.divide(BigDecimal.valueOf(10)).multiply((card.limit()));
+                BasicCardData approved = new BasicCardData(card.name(), card.network(), limit);
+                return approved;
+            }).toList();
+            return new EvaluatedClient(mappedApprovedCards);
+        }
+        catch (FeignException.FeignClientException e) {
+            int status = e.status();
+            if (HttpStatus.NOT_FOUND.value() == status)
+                // throw custom exception and treat it to give a better response
+                return new EvaluatedClient(null);
+            // same here
+            return new EvaluatedClient(null);
+        }
     }
 
 }
