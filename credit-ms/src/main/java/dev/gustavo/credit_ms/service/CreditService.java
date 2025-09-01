@@ -28,9 +28,8 @@ public class CreditService {
         // get card data from card-ms (GET /cards?code=)
         try {
             ResponseEntity<ClientData> client = clientClient.getClientByCode(code);
-            // this functionality (client having a relation with cards) is not implemented yet
-            //ResponseEntity<List<ClientCard>> clientSituation = cardClient.getCards(code);
-            return new ClientSituationDTO(client.getBody(), null);
+            ResponseEntity<List<BasicCardData>> clientSituation = cardClient.getCards(code);
+            return new ClientSituationDTO(client.getBody(), clientSituation.getBody());
         }
         catch (FeignException.FeignClientException e) {
             int status = e.status();
