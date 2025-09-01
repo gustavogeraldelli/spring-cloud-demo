@@ -1,8 +1,6 @@
 package dev.gustavo.credit_ms.controller;
 
-import dev.gustavo.credit_ms.controller.dto.ClientSituationDTO;
-import dev.gustavo.credit_ms.controller.dto.EvaluatedClient;
-import dev.gustavo.credit_ms.controller.dto.EvaluationData;
+import dev.gustavo.credit_ms.controller.dto.*;
 import dev.gustavo.credit_ms.service.CreditService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +27,10 @@ public class CreditController {
     @PostMapping
     public ResponseEntity<EvaluatedClient> evaluate(@RequestBody EvaluationData data) {
         return ResponseEntity.ok(creditService.evaluate(data.code(), data.income()));
+    }
+
+    @PostMapping("/issue-card")
+    public ResponseEntity<IssueCardProtocol> issueCard(@RequestBody IssueCard issueCard) {
+        return ResponseEntity.ok().body(creditService.issueCard(issueCard));
     }
 }
