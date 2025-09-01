@@ -21,10 +21,9 @@ public class CreditController {
         return "ok";
     }
 
-    // /credit=analysis/client-situation?cpf=1234567890
-    @GetMapping(value = "/client-situation", params = "cpf")
+    // /credit=analysis/client-situation?code=1234567890
+    @GetMapping(value = "/client-situation", params = "code")
     public ResponseEntity<ClientSituationDTO> clientSituation(@RequestParam String code) {
-        var c = creditService.clientSituation(code);
-        return ResponseEntity.ok().body(c);
+        return ResponseEntity.ok().body(creditService.clientSituation(code));
     }
 }

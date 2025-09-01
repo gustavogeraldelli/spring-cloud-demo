@@ -1,6 +1,6 @@
 package dev.gustavo.credit_ms.controller.dto;
 
-public record ClientDate(
+public record ClientData(
         Long id,
         String name
 ) {
