@@ -5,3 +5,13 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3.3
+    container_name: springcloud-keycloak
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+      - "8081:8080"
