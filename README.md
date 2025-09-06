@@ -11,3 +11,23 @@ docker compose up -d
 
 ### 3. Configure Keycloak
 - `http://localhost:8081`
+
+### 4. Run containerized services
+```bash
+# build each dockerfile
+docker build -t eureka-svc eurekaserver
+docker build -t api-gateway api-gateway
+docker build -t client-ms client-ms
+docker build -t card-ms card-ms
+docker build -t credit-ms credit-ms
+
+# create a network
+docker network create cloudnetwork 
+
+# run the containers with correct names for references
+docker run --name eureka-svc -p 8761:8761 --network cloudnetwork -e ADMIN_USERNAME=adm -e ADMIN_PASSWORD=adm eureka-svc
+docker run --name api-gateway -p 8080:8080 --network cloudnetwork -e KEYCLOAK_HOST=keycloak -e EUREKA_SERVER=eureka-svc api-gateway
+docker run --name client-ms --network cloudnetwork -e EUREKA_SERVER=eureka-svc -e ADMIN_USERNAME=adm -e ADMIN_PASSWORD=adm client-ms
+docker run --name card-ms --network cloudnetwork -e RABBITMQ_HOST=rabbitmq -e EUREKA_SERVER=eureka-svc -e ADMIN_USERNAME=adm -e ADMIN_PASSWORD=adm card-ms
+docker run --name credit-ms --network cloudnetwork -e RABBITMQ_HOST=rabbitmq -e EUREKA_SERVER=eureka-svc -e ADMIN_USERNAME=adm -e ADMIN_PASSWORD=adm credit-ms
+```
