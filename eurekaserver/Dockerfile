@@ -12,4 +12,4 @@ EXPOSE 8761
 ARG ADMIN_USERNAME=adm
 ARG ADMIN_PASSWORD=adm
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]

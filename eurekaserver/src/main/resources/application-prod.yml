@@ -4,8 +4,8 @@ spring:
 
   security:
     user:
-      name: adm
-      password: adm
+      name: ${ADMIN_USERNAME}
+      password: ${ADMIN_PASSWORD}
 
 server:
   port: 8761

@@ -10,6 +10,7 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 
 ARG KEYCLOAK_HOST=localhost
+ARG KEYCLOAK_PORT=8080
 ARG EUREKA_SERVER=eureka
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
