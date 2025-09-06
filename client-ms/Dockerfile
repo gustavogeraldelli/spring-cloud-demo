@@ -9,5 +9,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 ARG EUREKA_SERVER=eureka
+ARG ADMIN_USERNAME=adm
+ARG ADMIN_PASSWORD=adm
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

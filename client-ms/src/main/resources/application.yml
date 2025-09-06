@@ -8,6 +8,6 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://${ADMIN_USERNAME:adm}:${ADMIN_PASSWORD:adm}@${EUREKA_SERVER}:8761/eureka/
+      defaultZone: http://${ADMIN_USERNAME}:${ADMIN_PASSWORD}@${EUREKA_SERVER}:8761/eureka/
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
