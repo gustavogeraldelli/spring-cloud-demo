@@ -8,4 +8,8 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8761
+
+ARG ADMIN_USERNAME=adm
+ARG ADMIN_PASSWORD=adm
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
