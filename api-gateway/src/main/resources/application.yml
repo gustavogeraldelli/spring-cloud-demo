@@ -15,7 +15,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081/realms/cloudrealm
+          issuer-uri: http://${KEYCLOAK_HOST}:8081/realms/cloudrealm
 
 server:
   port: 8080
@@ -23,4 +23,4 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://${ADMIN_USERNAME:adm}:${ADMIN_PASSWORD:adm}@localhost:8761/eureka
+      defaultZone: http://${ADMIN_USERNAME:adm}:${ADMIN_PASSWORD:adm}@${EUREKA_SERVER}:8761/eureka
