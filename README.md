@@ -12,7 +12,13 @@ docker compose up -d
 ### 3. Configure Keycloak
 - `http://localhost:8081`
 
-### 4. Run containerized services
+### 4. Running the services
+
+#### Local 
+For local development, start services from the IDE. The default profile (using localhost) will be active. RabbitMQ and Keycloak containers must be running.
+
+#### Containerized
+The `Dockerfiles` are set up to activate the Spring `prod` profile, ensuring proper communication between the containers.
 ```bash
 # build each dockerfile
 docker build -t eureka-svc eurekaserver
